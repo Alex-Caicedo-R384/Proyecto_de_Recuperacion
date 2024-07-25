@@ -1,0 +1,214 @@
+﻿@model IEnumerable<PreguntasRec.Models.Preguntas>
+
+@{
+    ViewData["Title"] = "Preguntas";
+}
+
+@{
+    var usuario = ViewBag.Usuario as Usuario;
+    var preguntas = ViewBag.Preguntas as List<Preguntas>;
+    var preguntaActual = ViewBag.PreguntaActual as Preguntas;
+    var preguntaIndex = ViewBag.PreguntaIndex;
+    var puntaje = ViewBag.Puntaje;
+}
+
+<div class="row">
+    <div class="col-12">
+        <div class="card border">
+            <div class="card-header bg-dark">
+                <h3 id="ranking-heading" class="text-white"><strong>Responde las Preguntas y sube en el ranking</strong></h3>
+            </div>
+            <div class="card-body">
+                <form asp-action="Preguntas" method="post" id="preguntasForm">
+                    <input type="hidden" name="usuarioId" value="@usuario.UsuarioID" />
+                    <input type="hidden" name="preguntaId" value="@preguntaActual.PreguntaID" />
+                    <input type="hidden" name="puntaje" value="@puntaje" />
+                    <input type="hidden" name="preguntaIndex" value="@preguntaIndex" />
+                    <input type="hidden" name="respuestaSeleccionada" id="respuestaSeleccionada" value="" />
+                    <div>
+                        <h4>@preguntaActual.TextoPregunta</h4>
+                        <p>@(preguntaIndex + 1) / @preguntas.Count</p>
+                        <div id="respuestas-container">
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('#PreguntasTab').tab('show');
+
+            $('.nav-tabs a').on('click', function (e) {
+                e.preventDefault();
+                $(this).tab('show');
+            });
+
+            var opciones = [
+                { valor: '@preguntaActual.Correcta', texto: '@preguntaActual.Correcta', esCorrecta: true },
+                { valor: '@preguntaActual.Incorrecta1', texto: '@preguntaActual.Incorrecta1', esCorrecta: false },
+                { valor: '@preguntaActual.Incorrecta2', texto: '@preguntaActual.Incorrecta2', esCorrecta: false },
+                { valor: '@preguntaActual.Incorrecta3', texto: '@preguntaActual.Incorrecta3', esCorrecta: false }
+            ];
+
+            function mezclarArray(array) {
+                for (var i = array.length - 1; i > 0; i--) {
+                    var j = Math.floor(Math.random() * (i + 1));
+                    var temp = array[i];
+                    array[i] = array[j];
+                    array[j] = temp;
+                }
+            }
+
+            mezclarArray(opciones);
+
+            var contenedorRespuestas = $('#respuestas-container');
+            opciones.forEach(function (opcion) {
+                contenedorRespuestas.append(
+                    `<button type="button" class="btn btn-secondary btn-block respuesta-btn" data-valor="${opcion.valor}" data-es-correcta="${opcion.esCorrecta}">${opcion.texto}</button>`
+                );
+            });
+
+            $('#respuestas-container').on('click', '.respuesta-btn', function () {
+                var valorSeleccionado = $(this).data('valor');
+                var esCorrecta = $(this).data('es-correcta');
+
+                $('#respuestaSeleccionada').val(valorSeleccionado);
+
+                $('.respuesta-btn').each(function () {
+                    if ($(this).data('es-correcta')) {
+                        $(this).addClass('btn-success');
+                    } else if ($(this).data('valor') === valorSeleccionado) {
+                        $(this).addClass('btn-danger');
+                    }
+                });
+
+                setTimeout(function () {
+                    $('#preguntasForm').submit();
+                }, 2000);
+            });
+        });
+    </script>
+}
+
+<style>
+    #ranking-heading {
+        color: #c9ada7; /* Cambia el color del texto */
+    }
+
+    /* Estilo para las tarjetas */
+    .card {
+        margin-bottom: 20px; /* Espacio entre tarjetas */
+        border: 1px solid rgba(0,0,0,.125); /* Borde de la tarjeta */
+        border-radius: .25rem; /* Radio de borde de la tarjeta */
+    }
+
+    .card-header {
+        background-color: #343a40; /* Color de fondo del encabezado de la tarjeta */
+        color: #c9ada7; /* Color de texto del encabezado de la tarjeta */
+        font-weight: bold; /* Peso de la fuente del encabezado */
+    }
+
+    .card-body {
+        background-color: #333333; /* Color de fondo del cuerpo de la tarjeta */
+        color: #c9ada7; /* Color de texto dentro del cuerpo de la tarjeta */
+        font-weight: normal; /* Peso de la fuente del cuerpo */
+        padding: 15px; /* Espaciado interno del cuerpo de la tarjeta */
+    }
+
+    .pregunta-container {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .pregunta-texto {
+        font-size: 1.5em;
+        margin-bottom: 10px;
+    }
+
+    .pregunta-progreso {
+        font-size: 1.2em;
+        color: #c9ada7;
+        margin-bottom: 20px;
+    }
+
+    .respuestas-container .respuesta-btn {
+        margin-bottom: 10px;
+        padding: 10px 20px;
+        font-size: 1.2em;
+        cursor: pointer;
+    }
+
+    .respuestas-container .btn-success {
+        background-color: #28a745;
+        border-color: #28a745;
+    }
+
+    .respuestas-container .btn-danger {
+        background-color: #780000;
+        border-color: #780000;
+    }
+
+    #respuestas-container .btn {
+        display: block;
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+    body {
+        background-color: #d9d9d9; /* Color de fondo del cuerpo */
+        color: #000; /* Color de texto general */
+    }
+</style>
+
+<style>
+    /* Estilo para los botones generales */
+    .btn {
+        display: inline-block;
+        font-weight: bold;
+        text-align: center;
+        vertical-align: middle;
+        cursor: pointer;
+        border-radius: .25rem;
+        padding: 10px 20px;
+        font-size: 1em;
+        text-decoration: none;
+        transition: background-color 0.2s, color 0.2s;
+    }
+
+    .btn-secondary {
+        background-color: #c9ada7;
+        border-color: #c9ada7;
+        color: #000;
+    }
+
+        .btn-secondary:hover {
+            background-color: #ac8178;
+            border-color: #ac8178;
+        }
+
+    .btn-success {
+        background-color: #355f2d;
+        border-color: #355f2d;
+        color: #CAAD91;
+    }
+
+        .btn-success:hover {
+            background-color: #2a4724;
+            border-color: #2a4724;
+        }
+
+    .btn-danger {
+        background-color: #7b1b1b;
+        border-color: #7b1b1b;
+        color: #fff;
+    }
+
+        .btn-danger:hover {
+            background-color: #6c0c0c;
+            border-color: #6c0c0c;
+        }
+</style>

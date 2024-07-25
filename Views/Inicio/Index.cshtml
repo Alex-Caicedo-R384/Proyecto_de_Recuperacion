@@ -1,0 +1,285 @@
+﻿@model IEnumerable<PreguntasRec.Models.Usuario>
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var currentUserTag = Context.Session.GetString("UsuarioTag"); // Recupera el tag del usuario actual desde la sesión
+    var currentUserPuntaje = Model.FirstOrDefault(u => u.Tag == currentUserTag)?.Puntaje ?? 0;
+}
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card border">
+            <div class="card-header bg-dark text-center" id="ranking-header">
+                <h3 class="text-white"><strong>R A N K I N G</strong></h3>
+            </div>
+            <div class="card-body">
+                @if (Model.Count() > 0)
+                {
+                    <div class="table-responsive">
+                        <table class="table table-bordered" id="tblDominio" width="100%" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th>@Html.DisplayNameFor(m => m.Puntaje)</th>
+                                    <th>@Html.DisplayNameFor(m => m.Tag)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                    <tr class="@(item.Tag == currentUserTag ? "table-success" : "")">
+                                        <td>@Html.DisplayFor(m => item.Puntaje)</td>
+                                        <td>@Html.DisplayFor(m => item.Tag)</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+                else
+                {
+                    <p class="text-center">No hay Usuarios</p>
+                }
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card border" id="user-info-card">
+            <div class="card-header bg-dark">
+                <h3 class="text-white"><strong>Tu Información</strong></h3>
+            </div>
+            <div class="card-body">
+                <p><strong>Tag Actual:</strong> @currentUserTag</p>
+                <p><strong>Puntaje Actual:</strong> @currentUserPuntaje</p>
+            </div>
+        </div>
+        <div class="row mt-3">
+            <div class="col-12">
+                <a asp-action="Preguntas" asp-controller="Inicio" class="btn btn-custom btn-lg w-100">Iniciar Preguntas</a>
+            </div>
+        </div>
+        <div class="row mt-3">
+            <div class="col-12">
+                <a asp-action="Inicio" asp-controller="Inicio" class="btn btn-custom btn-lg w-100">Volver</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+            $('#tblDominio').DataTable({
+                language: {
+                    "decimal": "",
+                    "emptyTable": "No hay información",
+                    "info": "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
+                    "infoEmpty": "Mostrando 0 to 0 of 0 Entradas",
+                    "infoFiltered": "(Filtrado de _MAX_ total entradas)",
+                    "infoPostFix": "",
+                    "thousands": ",",
+                    "lengthMenu": "Mostrar _MENU_ Entradas",
+                    "loadingRecords": "Cargando...",
+                    "processing": "Procesando...",
+                    "search": "Buscar:",
+                    "zeroRecords": "Sin resultados encontrados",
+                    "paginate": {
+                        "first": "Primero",
+                        "last": "Ultimo",
+                        "next": "Siguiente",
+                        "previous": "Anterior"
+                    }
+                }
+            });
+        });
+    </script>
+}
+
+
+<style>
+    .btn-custom {
+        background-color: #c9ada7;
+        color: #000;
+        cursor: pointer;
+        margin-top: 10px;
+        margin-right: 5px;
+    }
+
+        .btn-custom:hover {
+            background-color: #ac8178;
+            color: #fff;
+        }
+
+    body {
+        background-color: #d9d9d9;
+    }
+
+    .table {
+        background-color: #333333; /* Fondo de la tabla */
+        font-size: 16px;
+    }
+
+        /* Estilo general para todas las celdas de la tabla */
+        .table th, .table td {
+            background-color: #828282; /* Fondo de celdas */
+            padding: 10px;
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        /* Estilo específico para las celdas de los encabezados */
+        .table th {
+            background-color: #000; /* Fondo de los encabezados */
+            color: #c9ada7; /* Color del texto en los encabezados */
+        }
+
+        /* Estilo para filas con clase .table-success */
+        .table tbody tr.table-success {
+            background-color: #CAAD91; /* Color de fondo para filas exitosas */
+        }
+
+        /* Estilo para filas normales en el cuerpo de la tabla */
+        .table tbody tr {
+            background-color: #343a40; /* Fondo para filas normales */
+            color: #000; /* Color del texto en filas normales */
+        }
+
+    /* Asegúrate de que el color de fondo de las celdas no se sobrescriba */
+    .table-success td {
+        background-color: #c9ada7; /* Asegura que el fondo de celdas en filas exitosas se aplique */
+    }
+
+    .card-body {
+        background-color: #333333; /* Fondo del cuerpo de la tarjeta */
+    }
+
+    tr {
+        background-color: #343a40; /* Fondo de filas por defecto */
+    }
+
+    #tblDominio {
+        border: 1px solid #333333; /* Borde de la tabla */
+        border-radius: 5px;
+        width: 100%;
+    }
+
+        #tblDominio th, #tblDominio td {
+            border-width: 0.1px;
+        }
+
+        #tblDominio th {
+            border-style: outset;
+            border-color: #546565;
+            text-align: center;
+        }
+
+        #tblDominio td {
+            border-style: inset;
+            border-color: #BEAFAF;
+        }
+
+    #tblDominio_wrapper .dataTables_info,
+    #tblDominio_wrapper .dataTables_paginate .paginate_button,
+    #tblDominio_wrapper .dataTables_filter label,
+    #tblDominio_wrapper .dataTables_empty,
+    #tblDominio_wrapper .dataTables_length label {
+        color: #c9ada7;
+    }
+
+    #tblDominio_wrapper .dataTables_filter input[type="search"] {
+        color: #c9ada7;
+        background-color: #0000;
+        border: 0.1px solid #c9ada7;
+        margin-bottom: 5px;
+    }
+</style>
+
+<style>
+    #user-info-card {
+        border: 1px solid #007bff; /* Borde azul personalizado */
+        border-radius: .25rem; /* Radio de borde de la tarjeta */
+        margin-bottom: 20px; /* Espacio inferior de la tarjeta */
+    }
+
+        #user-info-card .card-header {
+            background-color: #0056b3; /* Color de fondo del encabezado */
+            color: #fff; /* Color del texto del encabezado */
+        }
+
+        #user-info-card .card-body {
+            background-color: #333; /* Color de fondo del cuerpo de la tarjeta */
+            color: #ffff; /* Color del texto del cuerpo de la tarjeta */
+            padding: 20px; /* Espaciado interno del cuerpo de la tarjeta */
+        }
+
+        #user-info-card p {
+            font-size: 1.1em; /* Tamaño de fuente del texto */
+            margin-bottom: 10px; /* Espacio inferior de cada párrafo */
+        }
+
+        #user-info-card strong {
+            color: #c9ada7; /* Color del texto en negrita */
+        }
+</style>
+
+<style>
+    #welcome-card {
+        border: 1px solid #007bff; /* Borde azul personalizado */
+        border-radius: .25rem; /* Radio de borde de la tarjeta */
+        margin-bottom: 20px; /* Espacio inferior de la tarjeta */
+    }
+
+        #welcome-card .card-header {
+            background-color: #0056b3; /* Color de fondo del encabezado */
+            color: #c9ada7; /* Color del texto del encabezado */
+        }
+
+        #welcome-card .card-body {
+            background-color: #333; /* Color de fondo del cuerpo de la tarjeta */
+            color: #fff; /* Color del texto del cuerpo de la tarjeta */
+            padding: 20px; /* Espaciado interno del cuerpo de la tarjeta */
+        }
+
+        #welcome-card p {
+            font-size: 1.2em; /* Tamaño de fuente del párrafo */
+            line-height: 1.5; /* Altura de línea del párrafo */
+            margin-bottom: 20px; /* Espacio inferior del párrafo */
+        }
+
+        #welcome-card h5 {
+            font-size: 1.3em; /* Tamaño de fuente del subtítulo */
+            margin-bottom: 15px; /* Espacio inferior del subtítulo */
+        }
+
+        #welcome-card ul {
+            list-style-type: disc; /* Tipo de lista de puntos */
+            margin-left: 20px; /* Margen izquierdo de la lista */
+        }
+
+            #welcome-card ul li {
+                margin-bottom: 10px; /* Espacio inferior de cada ítem de lista */
+            }
+
+        #welcome-card strong {
+            color: #c9ada7; /* Color del texto en negrita */
+        }
+</style>
+
+<style>
+    #ranking-header {
+        background-color: #333333; /* Color oscuro similar al bg-dark */
+        text-align: center;
+        border-bottom: 3px solid #c9ada7; /* Línea inferior azul para resaltar */
+    }
+
+        #ranking-header h3 {
+            font-size: 2rem; /* Ajusta el tamaño de fuente según sea necesario */
+            font-weight: bold;
+            letter-spacing: 1px; /* Espaciado entre letras */
+            text-transform: uppercase; /* Mayúsculas para las letras */
+            margin: 0; /* Elimina el margen por defecto */
+        }
+</style>
+
+

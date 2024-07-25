@@ -1,0 +1,86 @@
+﻿@{
+    ViewData["Title"] = "Privacy Policy";
+}
+<div class="row mt-3">
+    <div class="col-md-12">
+        <div class="card border">
+            <div class="card-header" id="info-header">
+                <h3><strong>Información</strong></h3>
+            </div>
+            <div class="card-body" id="info-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered" width="100%" cellspacing="0">
+                        <thead>
+                            <tr>
+                                <th class="campo">Campo</th>
+                                <th class="valor">Valor</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="campo">Autor</td>
+                                <td class="valor">Alex Caicedo Ramos</td>
+                            </tr>
+                            <tr>
+                                <td class="campo">Fecha</td>
+                                <td class="valor">7 de Marzo</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    body {
+        background-color: #d9d9d9; /* Fondo de la página */
+    }
+
+    #info-header {
+        background-color: #333333; /* Color oscuro del encabezado */
+        text-align: center;
+        border-bottom: 2px solid #c9ada7; /* Línea inferior dorada */
+        color: #c9ada7; /* Color del texto */
+    }
+
+        #info-header h3 {
+            font-size: 2rem; /* Tamaño de fuente */
+            font-weight: bold;
+            letter-spacing: 1px; /* Espaciado entre letras */
+            text-transform: uppercase; /* Mayúsculas */
+            margin: 0; /* Elimina el margen por defecto */
+            color: #c9ada7; /* Color del texto */
+        }
+
+    #info-body {
+        background-color: #444444; /* Color de fondo del card-body */
+        color: #c9ada7; /* Color del texto en el card-body */
+    }
+
+    .table thead th {
+        background-color: #333333; /* Color de fondo para el encabezado de la tabla */
+        color: #c9ada7; /* Color del texto en el encabezado */
+    }
+
+    .table tbody tr:nth-child(even) {
+        background-color: #444444; /* Color de fondo para las filas pares */
+    }
+
+    .table tbody tr:nth-child(odd) {
+        background-color: #444444; /* Color de fondo para las filas impares */
+    }
+
+    .table tbody td {
+        color: #c9ada7; /* Color del texto en la tabla */
+    }
+
+    .campo {
+        font-weight: bold; /* Negritas para la columna "Campo" */
+    }
+
+    .valor {
+        font-weight: normal; /* Normal para la columna "Valor" */
+    }
+</style>

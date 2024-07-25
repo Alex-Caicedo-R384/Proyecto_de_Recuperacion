@@ -1,0 +1,186 @@
+﻿@model PreguntasRec.Models.Usuario
+
+@{
+    ViewData["Title"] = "Ingresar a Preguntas";
+}
+
+<div class="row mt-4">
+    <div class="col-md-12">
+        <div class="card border" id="welcome-card">
+            <div class="card-header bg-dark">
+                <h3 class="text-white"><strong>Bienvenidos al Desafío de Educación Ambiental</strong></h3>
+            </div>
+            <div class="card-body">
+                <form>
+                    <div class="form-group">
+                        <p>¡Prepárate para poner a prueba tus conocimientos sobre el medio ambiente! En nuestro desafío, te enfrentarás a 10 preguntas seleccionadas al azar. Estas preguntas cubrirán una variedad de temas relacionados con la educación ambiental, incluyendo conservación, biodiversidad, cambio climático y más.</p>
+
+                        <h5>¿Cómo funciona?</h5>
+                        <ul>
+                            <li>
+                                <strong>Participación:</strong> Cada vez que ingreses al desafío, recibirás 10 preguntas al azar. Esto asegura que cada intento sea único y te mantendrá aprendiendo cosas nuevas.
+                            </li>
+                            <li>
+                                <strong>Evaluación:</strong> Por cada respuesta correcta, ganarás puntos. ¡Responde tantas preguntas correctamente como puedas para maximizar tu puntuación!
+                            </li>
+                            <li>
+                                <strong>Ranking:</strong> Tus puntos se sumarán a tu puntuación total, lo que te permitirá escalar en nuestro ranking de usuarios. ¡Cuantas más preguntas respondas correctamente, más alto subirás en la clasificación!
+                            </li>
+                        </ul>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            @using (Html.BeginForm("Index", "Inicio", FormMethod.Post))
+            {
+                <div class="form-group">
+                    @Html.TextBoxFor(m => m.Correo, new { @class = "form-control", id = "txtEmail", placeholder = "Ingrese su correo" })
+                    @Html.ValidationMessageFor(m => m.Correo, "", new { @class = "text-danger" })
+                </div>
+
+                @if (ViewBag.ShowTagField != null && (bool)ViewBag.ShowTagField)
+                {
+                    <div id="tagField">
+                        @Html.TextBoxFor(m => m.Tag, new { @class = "form-control", id = "txtTag", placeholder = "Ingrese un tag" })
+                        @Html.ValidationMessageFor(m => m.Tag, "", new { @class = "text-danger" })
+                    </div>
+                }
+                else
+                {
+                    <div id="tagField" style="display: none;">
+                        @Html.TextBoxFor(m => m.Tag, new { @class = "form-control", id = "txtTag", placeholder = "Ingrese un tag" })
+                        @Html.ValidationMessageFor(m => m.Tag, "", new { @class = "text-danger" })
+                    </div>
+                }
+
+                <div class="text-center">
+                    <button type="submit" class="btn btn-custom" name="action" value="correo">Ingresar con Correo</button>
+                    <button type="submit" class="btn btn-custom" name="action" value="invitado">Ingresar como invitado</button>
+                </div>
+            }
+
+            @if (ViewData.ModelState.IsValid == false)
+            {
+                <div class="alert alert-danger mt-3">
+                    @foreach (var modelState in ViewData.ModelState.Values)
+                    {
+                        foreach (var error in modelState.Errors)
+                        {
+                            <p>@error.ErrorMessage</p>
+                        }
+                    }
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+
+<script>
+    function validateForm() {
+        var correo = document.getElementById("txtEmail").value.trim();
+        var tagField = document.getElementById("tagField");
+        var tagInput = document.getElementById("txtTag");
+        var action = document.querySelector('button[type="submit"]').value;
+
+        if (action === "correo") {
+            if (correo === "") {
+                alert("Por favor ingrese un correo antes de buscar.");
+                return false;
+            }
+
+            var existingUser = false; 
+
+            if (!existingUser) {
+                tagField.style.display = "block";
+                tagInput.focus();
+                return false;
+            }
+        }
+        return true; 
+    }
+</script>
+
+
+<script>
+    function validateForm() {
+        var correo = document.getElementById("txtEmail").value.trim();
+        var action = document.querySelector('button[type="submit"]').value;
+
+        if (action === "correo" && correo === "") {
+            alert("Por favor ingrese un correo antes de buscar.");
+            return false;
+        }
+        return true;
+    }
+</script>
+
+
+<style>
+    body {
+        background-color: #d9d9d9;
+    }
+
+    .btn-custom {
+        background-color: #780000; /* Color rojo */
+        color: #fff; /* Color del texto */
+        cursor: pointer; /* Cambia el cursor al pasar sobre el botón */
+        margin-top: 10px; /* Añade margen arriba */
+        margin-right: 5px; /* Añade espacio entre los botones */
+    }
+
+        .btn-custom:hover {
+            background-color: #370617;
+            color: #fff;
+        }
+</style>
+
+
+<style>
+    #welcome-card {
+        border: 1px solid #007bff; /* Borde azul personalizado */
+        border-radius: .25rem; /* Radio de borde de la tarjeta */
+        margin-bottom: 20px; /* Espacio inferior de la tarjeta */
+    }
+
+        #welcome-card .card-header {
+            background-color: #0056b3; /* Color de fondo del encabezado */
+            color: #c9ada7; /* Color del texto del encabezado */
+        }
+
+        #welcome-card .card-body {
+            background-color: #333; /* Color de fondo del cuerpo de la tarjeta */
+            color: #fff; /* Color del texto del cuerpo de la tarjeta */
+            padding: 20px; /* Espaciado interno del cuerpo de la tarjeta */
+        }
+
+        #welcome-card p {
+            font-size: 1.2em; /* Tamaño de fuente del párrafo */
+            line-height: 1.5; /* Altura de línea del párrafo */
+            margin-bottom: 20px; /* Espacio inferior del párrafo */
+        }
+
+        #welcome-card h5 {
+            font-size: 1.3em; /* Tamaño de fuente del subtítulo */
+            margin-bottom: 15px; /* Espacio inferior del subtítulo */
+        }
+
+        #welcome-card ul {
+            list-style-type: disc; /* Tipo de lista de puntos */
+            margin-left: 20px; /* Margen izquierdo de la lista */
+        }
+
+            #welcome-card ul li {
+                margin-bottom: 10px; /* Espacio inferior de cada ítem de lista */
+            }
+
+        #welcome-card strong {
+            color: #c9ada7; /* Color del texto en negrita */
+        }
+</style>
